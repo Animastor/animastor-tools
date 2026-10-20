@@ -25,6 +25,14 @@ android {
         //   ./gradlew assembleDebug -PTESTER_WIDTH=1440
         val defaultWidth = (project.findProperty("TESTER_WIDTH") as? String)?.toIntOrNull() ?: 1366
         buildConfigField("int", "DEFAULT_WIDTH", "$defaultWidth")
+
+        // Optional Basic Auth credentials for the target host. Never commit real
+        // credentials; pass them at build time (default password is empty):
+        //   ./gradlew assembleDebug -PTESTER_AUTH_USER=admin -PTESTER_AUTH_PASS=...
+        val authUser = project.findProperty("TESTER_AUTH_USER") as? String ?: "admin"
+        val authPass = project.findProperty("TESTER_AUTH_PASS") as? String ?: ""
+        buildConfigField("String", "AUTH_USER", "\"$authUser\"")
+        buildConfigField("String", "AUTH_PASS", "\"$authPass\"")
     }
 
     buildTypes {

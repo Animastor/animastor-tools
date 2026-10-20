@@ -74,8 +74,8 @@ class MainActivity : Activity() {
     @Volatile
     private var currentCssWidth = BuildConfig.DEFAULT_WIDTH
 
-    // Basic Auth для app.animastor.org (см. proxy/conf/.htpasswd) — те же креды,
-    // что зашиты в mobile-web-tester.
+    // Optional Basic Auth для целевого хоста — креды берутся из BuildConfig
+    // (gradle-свойства TESTER_AUTH_USER / TESTER_AUTH_PASS, пароль по умолчанию пуст).
     private val authHeader by lazy {
         "Basic " + Base64.encodeToString(
             "$AUTH_USER:$AUTH_PASS".toByteArray(StandardCharsets.UTF_8),
@@ -411,9 +411,9 @@ class MainActivity : Activity() {
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
     companion object {
-        // Basic Auth для app.animastor.org (см. proxy/conf/.htpasswd).
-        private const val AUTH_USER = "admin"
-        private const val AUTH_PASS = "REDACTED"
+        // Optional Basic Auth: задаётся при сборке (-PTESTER_AUTH_USER / -PTESTER_AUTH_PASS).
+        private val AUTH_USER = BuildConfig.AUTH_USER
+        private val AUTH_PASS = BuildConfig.AUTH_PASS
         private const val PREF_URL = "url"
         private const val PREF_VIEWPORT = "viewport"
     }

@@ -1,0 +1,8 @@
+# Build artifacts and local machine configuration
+.gradle/
+build/
+local.properties
+*.apk
+.idea/
+captures/
+.DS_Store

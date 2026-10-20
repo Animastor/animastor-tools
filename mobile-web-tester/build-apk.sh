@@ -11,9 +11,14 @@ echo " Mobile Web Tester — build APK"
 echo "=================================="
 echo
 
-# Ensure Android SDK is configured
+# Android SDK location: ANDROID_SDK_ROOT (preferred) or ANDROID_HOME
+SDK_DIR="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
 if [ ! -f local.properties ]; then
-    echo "sdk.dir=/home/sureg/Android/Sdk" > local.properties
+    if [ -z "$SDK_DIR" ]; then
+        echo "error: set ANDROID_SDK_ROOT (or ANDROID_HOME) to your Android SDK" >&2
+        exit 1
+    fi
+    printf 'sdk.dir=%s\n' "$SDK_DIR" > local.properties
 fi
 
 ./gradlew clean assembleDebug
@@ -25,8 +30,9 @@ echo "APK: $SCRIPT_DIR/$APK"
 echo
 
 # Copy to net-disk so the tablet can download it the usual way
-if [ -d /home/sureg/net-disk ]; then
-    cp "$APK" /home/sureg/net-disk/mobile-web-tester.apk
+NET_DISK_DIR="${NET_DISK_DIR:-$HOME/net-disk}"
+if [ -d "$NET_DISK_DIR" ]; then
+    cp "$APK" "$NET_DISK_DIR/mobile-web-tester.apk"
     echo "Installed on the tablet via:"
     echo "  https://animastor.org/net-disk/mobile-web-tester.apk"
 fi
